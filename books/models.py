@@ -52,3 +52,45 @@ class Classmark(models.Model):
             return False
 
         return self.number < o.number
+
+
+@total_ordering
+class Book(models.Model):
+    title = models.CharField(max_length=128)
+    subtitle = models.CharField(max_length=128, blank=True, null=True)
+    classmark = models.ForeignKey(Classmark, on_delete=models.PROTECT)
+    author1 = models.ForeignKey(
+        Author, on_delete=models.PROTECT, related_name='author1_set')
+    author2 = models.ForeignKey(
+        Author, on_delete=models.PROTECT, related_name='author2_set', null=True)
+    author3 = models.ForeignKey(
+        Author, on_delete=models.PROTECT, related_name='author3_set', null=True)
+    author4 = models.ForeignKey(
+        Author, on_delete=models.PROTECT, related_name='author4_set', null=True)
+    author5 = models.ForeignKey(
+        Author, on_delete=models.PROTECT, related_name='author5_set', null=True)
+
+    @property
+    def _sort_tuple(self):
+        return (self.classmark,
+                self.title,
+                self.author1,
+                self.author2,
+                self.author3,
+                self.author4,
+                self.author5)
+
+    def __str__(self) -> str:
+        return f'{self.classmark}'
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, Book):
+            return False
+
+        return self._sort_tuple == o._sort_tuple
+
+    def __lt__(self, o: object) -> bool:
+        if not isinstance(o, Book):
+            return False
+
+        return self._sort_tuple < o._sort_tuple

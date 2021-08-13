@@ -16,21 +16,21 @@ class Author(models.Model):
         else:
             return f'{self.last_name}, {self.first_name}'
 
+    @property
+    def _sort_tuple(self):
+        return (self.last_name, self.first_name, self.middle_names)
+
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, Author):
             return False
 
-        return ((self.last_name, self.first_name, self.middle_names) ==
-                (o.last_name, o.first_name, o.middle_names)
-                )
+        return self._sort_tuple == o._sort_tuple
 
     def __lt__(self, o):
         if not isinstance(o, Author):
             return False
 
-        return ((self.last_name, self.first_name, self.middle_names) <
-                (o.last_name, o.first_name, o.middle_names)
-                )
+        return self._sort_tuple < o._sort_tuple
 
 
 @total_ordering

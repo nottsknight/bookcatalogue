@@ -31,3 +31,24 @@ class Author(models.Model):
         return ((self.last_name, self.first_name, self.middle_names) <
                 (o.last_name, o.first_name, o.middle_names)
                 )
+
+
+@total_ordering
+class Classmark(models.Model):
+    number = models.CharField(max_length=16, primary_key=True)
+    name = models.CharField(max_length=128)
+
+    def __str__(self) -> str:
+        return f'{self.number} {self.name}'
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, Classmark):
+            return False
+
+        return self.number == o.number
+
+    def __lt__(self, o):
+        if not isinstance(o, Classmark):
+            return False
+
+        return self.number < o.number

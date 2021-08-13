@@ -62,17 +62,21 @@ class Book(models.Model):
     author1 = models.ForeignKey(
         Author, on_delete=models.PROTECT, related_name='author1_set')
     author2 = models.ForeignKey(
-        Author, on_delete=models.PROTECT, related_name='author2_set', null=True)
+        Author, on_delete=models.PROTECT, related_name='author2_set', blank=True, null=True)
     author3 = models.ForeignKey(
-        Author, on_delete=models.PROTECT, related_name='author3_set', null=True)
+        Author, on_delete=models.PROTECT, related_name='author3_set', blank=True, null=True)
     author4 = models.ForeignKey(
-        Author, on_delete=models.PROTECT, related_name='author4_set', null=True)
+        Author, on_delete=models.PROTECT, related_name='author4_set', blank=True, null=True)
     author5 = models.ForeignKey(
-        Author, on_delete=models.PROTECT, related_name='author5_set', null=True)
+        Author, on_delete=models.PROTECT, related_name='author5_set', blank=True, null=True)
+
+    @property
+    def shelf_label(self):
+        return f'{self.classmark.number} {self.author1.last_name[:3].upper()}'
 
     @property
     def _sort_tuple(self):
-        return (self.classmark,
+        return (self.shelf_label,
                 self.title,
                 self.author1,
                 self.author2,
@@ -81,7 +85,7 @@ class Book(models.Model):
                 self.author5)
 
     def __str__(self) -> str:
-        return f'{self.classmark}'
+        return f'[{self.shelf_label}] {self.title}'
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, Book):

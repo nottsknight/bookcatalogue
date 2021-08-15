@@ -13,6 +13,10 @@
             <h1>Book Catalogue
                 <small class="text-muted">{% block subtitle %}{% endblock %}</small>
             </h1>
+            <nav class="nav nav-tabs">
+                <a class="nav-link" href="{% url 'index' %}">Home</a>
+                <a class="nav-link" href="{% url 'book_list' %}">Books</a>
+            </nav>
         </div>
         {% block content %}{% endblock %}
     </div>
